@@ -8,7 +8,8 @@ import pandas as pd
 
 # pytesseract.pytesseract.tesseract_cmd = r'Tesseract-OCR\tesseract.exe'
 # pytesseract.pytesseract.tesseract_cmd = os.path.join(os.getcwd(), 'Tesseract-OCR', 'tesseract.exe')
-pytesseract.pytesseract.tesseract_cmd = os.path.abspath('Tesseract-OCR/tesseract.exe')
+pytesseract.pytesseract.tesseract_cmd = "tesseract"
+
 app = Flask(__name__)
 CORS(app)
 
