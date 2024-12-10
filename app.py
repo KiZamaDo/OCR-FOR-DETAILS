@@ -6,9 +6,11 @@ import os
 import re
 import pandas as pd
 
-# pytesseract.pytesseract.tesseract_cmd = r'Tesseract-OCR\tesseract.exe'
-# pytesseract.pytesseract.tesseract_cmd = os.path.join(os.getcwd(), 'Tesseract-OCR', 'tesseract.exe')
-pytesseract.pytesseract.tesseract_cmd = "tesseract"
+# Set the TESSDATA_PREFIX environment variable to the correct path
+os.environ["TESSDATA_PREFIX"] = "/app/.apt/usr/share/tesseract-ocr/5/"
+
+# Optional: Set the Tesseract executable command path (if needed)
+# pytesseract.pytesseract.tesseract_cmd = "tesseract"
 
 app = Flask(__name__)
 CORS(app)
@@ -99,12 +101,12 @@ def upload_file():
         return jsonify({"error": "No selected file"}), 400
 
     if file:
-     image_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-     file.save(image_path)
+        image_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file.save(image_path)
 
     try:
         img = Image.open(image_path)
-        extracted_text = pytesseract.image_to_string(img)
+        extracted_text = pytesseract.image_to_string(img, config='--tessdata-dir "/app/.apt/usr/share/tesseract-ocr/5/tessdata"')
 
         # Process the extracted text
         modified_text = replace_abbreviations(extracted_text)
@@ -122,7 +124,6 @@ def upload_file():
         return jsonify({"error": str(e)}), 500
     finally:
         os.remove(image_path)  # Cleanup uploaded file
-
 
 if __name__ == '__main__':
     app.run()
